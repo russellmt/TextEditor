@@ -1,0 +1,19 @@
+RUN:
+To run the Text Editor, start bin/text_editor.jar
+	This runs the text editor app WITHOUT the stay open check box items for styling.
+	I personally thought they get in the way since they tend to cause the caret to go away or be moved.
+To run the Text Editor with the Stay Open check box, start bin/text_editor.jar -so
+	where -so (stay open) is the argument of the main method.
+
+NOTES:
+The TextEditor class contains the main method. It builds a TextEditorPane (which extends JTextPane) and TextEditorMenuBar (which extends JMenuBar).
+The TextEditorMenuBar contains instances of FileMenu, EditMenu, and FontMenu (which contains Families, Sizes, Styles, and Colors as nested menus).
+
+The type of file created upon saving depends on the extension. By default, the editor text is saved in order to promote compatibility with other software.
+However, if the extension is set to “.sst” (serialized style text), then the styled document will be serialized.
+Note that I have to remove the CompoundUndoManager from the document and then re-add it after serialization, since this was causing save errors.
+
+By getting the attributes at the current location of the caret, the menu items, which are stored in a maps, can update their state (using a CaretListener). If a selection is made, the menu items simply show the state at the release of the drag to create the selection. Showing the selected Color based upon the caret location was a tricky special case, since the color attribute is a color object, not a string. Hence I had to loop through a map of color names and objects to find the correct color name.
+
+The find/replace menu allows for text wrapping, case matching, and use of regular expressions. This was implemented using the Java Matcher class.
+There is also support for forward, backward, and ALL finding/replacing. Sometimes the PREVIOUS find or replace fails to work correctly, but I have yet to determine exactly why.
